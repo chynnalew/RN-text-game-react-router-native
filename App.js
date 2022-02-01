@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState} from 'react';
+import GameRoutes from './components/GameRoutes';
+import * as Font from "expo-font";
+import Apploading from "expo-app-loading";
+
+const getFonts = () =>
+Font.loadAsync({
+  dirtyEgo: require('./assets/fonts/DirtyEgo.ttf'),
+  oregonBook: require('./assets/fonts/OregonLdoBook.ttf'),
+  oregonBold: require('./assets/fonts/OregonLdoBold-gxe6.ttf'),
+  oregonEx: require('./assets/fonts/OregonLdoExtended-ALWm.ttf')
+});
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [fontsloaded, setFontsLoaded] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if(fontsloaded){
+    return (
+      <GameRoutes/>
+     );
+  } else {
+    return (
+      <Apploading
+        startAsync={getFonts}
+        onFinish={() => {
+          setFontsLoaded(true);
+        }}
+        onError={console.warn}
+      />
+    );
+  }
+};
